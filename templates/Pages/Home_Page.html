@@ -1,4 +1,42 @@
 {% extends 'base.html' %}
 {% block content %}
 <h1>Welcome !!!!!</h1>
+<div id="Posts">
+    Loading....
+</div>
+<script>
+    const postelement=document.getElementById("Posts")
+    function handlelike(post_id, current_likes)
+    {
+        console.log(post_id, current_likes);
+    }
+    function likebtn(post_id, post_likes)
+    {
+        return "<button class='btn btn-primary' onclick=handlelike(" + post_id + ","+post_likes + ")>Like</button>"
+    }
+    function formatposts(posts){
+        var str= "<div class='mb-4 Posts' id='Postid-" + posts.id + "'><h1>" +posts.id + "</h1>" + "<p>" + posts.content +
+        "</p><div class='btn-group'>"+likebtn(posts.id, posts.Likes) + "</div> </div>"
+        return str
+    }
+    const xhr = new XMLHttpRequest()
+    const method = 'GET'
+    const url = "/posts"
+    const responsetype = "json"
+    xhr.responseType = responsetype
+    xhr.open(method, url)
+    xhr.onload = function () {
+        const server_response=xhr.response.response
+        // console.log(server_response);
+        var i;
+        var str=""
+        for( i=0;i<server_response.length;i++)
+        {
+            var list_item=formatposts(server_response[i])
+            str+=list_item
+        }
+        postelement.innerHTML=str
+    }
+    xhr.send()
+</script>
 {% endblock content %}
